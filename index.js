@@ -19,8 +19,10 @@ const chalk = require("chalk");
 const FileType = require("file-type");
 const CFonts = require("cfonts");
 const { exec, spawn, execSync } = require("child_process");
+const readline = require("readline")
 const moment = require("moment-timezone");
 const PhoneNumber = require("awesome-phonenumber");
+const usePairingCode = true
 const { promisify } = require("util");
 const writeFileAsync = promisify(fs.writeFile);
 const path = require("path");
@@ -48,32 +50,31 @@ const store = makeInMemoryStore({
   logger: pino().child({ level: "silent", stream: "store" }),
 });
 
-async function startA17() {
-  console.log(
-    color(
-      figlet.textSync("Laksmana27 bit whatsapp", {
-        font: "Standard",
-        horizontalLayout: "default",
-        vertivalLayout: "default",
-        //width: 80,
-        // whitespaceBreak: true,
-        whitespaceBreak: false,
-      }),
-      "green"
-    )
-  );
-  console.log(color('\nHello, I am RLP27, the main Developer of this bot.\n\nThanks for using: Emily.', 'aqua'))
-  console.log(color('\nYou can follow me on GitHub: Laksmana27', 'aqua'))
-
-  const { state, saveCreds } = await useMultiFileAuthState("./A17-SESSION");
-  const A17 = A17Connect({
-    logger: pino({ level: "silent" }),
-    printQRInTerminal: true,
-    browser: ["Emily Bot", "Safari", "3.O"],
-    auth: state,
+//Readline
+const question = (text) => {
+  const rl = readline.createInterface({
+input: process.stdin,
+output: process.stdout
   });
+  return new Promise((resolve) => {
+rl.question(text, resolve)
+  })
+};
 
-  store.bind(A17.ev);
+
+async function startA17() {
+const { state, saveCreds } = await useMultiFileAuthState("./session")
+   let { version, isLatest } = await fetchLatestBaileysVersion();
+const A17 = A17Connect({
+logger: pino({ level: "silent" }),
+printQRInTerminal: !usePairingCode,
+auth: state,
+browser: ["Ubuntu","Chrome", "20.0.04"]
+});
+if(usePairingCode && !A17.authState.creds.registered) {
+		const phoneNumber = await question(color('\n\n\nSilahkan masukin nomor Whatsapp Awali dengan 62:\n', 'magenta'));
+		const code = await A17.requestPairingCode(phoneNumber.trim())
+		console.log(color(`⚠︎ Kode Pairing Bot Whatsapp kamu :`,"gold"), color(`${code}`, "red"))
 
 
  //
@@ -1065,15 +1066,16 @@ You'll be a noticeable absence!
     );
   };
 
-  return A17;
+  return A17
 }
 
-startA17();
-
-let file = require.resolve(__filename);
+return A17
+}
+startA17()
+let file = require.resolve(__filename)
 fs.watchFile(file, () => {
-  fs.unwatchFile(file);
-  console.log(chalk.redBright(`${__filename} Updated`));
-  delete require.cache[file];
-  require(file);
-});
+fs.unwatchFile(file)
+console.log(chalk.redBright(`Update ${__filename}`))
+delete require.cache[file]
+require(file)
+})
