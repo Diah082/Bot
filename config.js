@@ -21,13 +21,13 @@ global.prefa = ["."];                                    //Default prefix here. 
 
 
 //
-global.Owner = ["6287715912587", "6282326322300"];         //If you want singal number so global.Owner = ['6287715912587'] Change into your number.
-global.OwnerNumber = ["6287715912587", "6282326322300", "6287737226143"];   //If you want singal number so global.Owner = ['6287715912587'] Change into your number.
-global.ownertag = ["6287715912587"];
-global.OwnerName = "Newbie Store";
+global.Owner = ["6282280131461", "6282326322300"];         //If you want singal number so global.Owner = ['6287715912587'] Change into your number.
+global.OwnerNumber = ["6282280131461", "6282326322300", "6287737226143"];   //If you want singal number so global.Owner = ['6287715912587'] Change into your number.
+global.ownertag = ["6282280131461"];
+global.OwnerName = "Wistara Store";
 global.BotName = "ELMA";
 global.packname = "ELMA Bot";                             //Do not change.
-global.author = "NEWBIE";                               //Do not change.
+global.author = "NEWBIE STORE";                               //Do not change.
 global.BotSourceCode = "https://github.com/diah082/botnewbie"; //Do not change.
 global.SupportGroupLink = "https://chat.whatsapp.com/GhRGdwfaMVDCoeAdzILfl";
 global.Mod = "NEWBIE";
