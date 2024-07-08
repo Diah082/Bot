@@ -19,10 +19,8 @@ const chalk = require("chalk");
 const FileType = require("file-type");
 const CFonts = require("cfonts");
 const { exec, spawn, execSync } = require("child_process");
-const readline = require("readline")
 const moment = require("moment-timezone");
 const PhoneNumber = require("awesome-phonenumber");
-const usePairingCode = true
 const { promisify } = require("util");
 const writeFileAsync = promisify(fs.writeFile);
 const path = require("path");
@@ -50,48 +48,35 @@ const store = makeInMemoryStore({
   logger: pino().child({ level: "silent", stream: "store" }),
 });
 
-//Readline
-const question = (text) => {
-  const rl = readline.createInterface({
-input: process.stdin,
-output: process.stdout
-  });
-  return new Promise((resolve) => {
-rl.question(text, resolve)
-  })
-};
-
-
 async function startA17() {
-const { state, saveCreds } = await useMultiFileAuthState("./session")
-   let { version, isLatest } = await fetchLatestBaileysVersion();
-const A17 = A17Connect({
-logger: pino({ level: "silent" }),
-printQRInTerminal: !usePairingCode,
-auth: state,
-browser: ["Ubuntu","Chrome", "20.0.04"]
-});
-if(usePairingCode && !A17.authState.creds.registered) {
-		const phoneNumber = await question(color('\n\n\nSilahkan masukin nomor Whatsapp Awali dengan 62:\n', 'magenta'));
-		const code = await A17.requestPairingCode(phoneNumber.trim())
-		console.log(color(`⚠︎ Kode Pairing Bot Whatsapp kamu :`,"gold"), color(`${code}`, "red"))
+  console.log(
+    color(
+      figlet.textSync("NEWBIEBOT bit whatsapp", {
+        font: "Standard",
+        horizontalLayout: "default",
+        vertivalLayout: "default",
+        //width: 80,
+        // whitespaceBreak: true,
+        whitespaceBreak: false,
+      }),
+      "green"
+    )
+  );
+  console.log(color('\nHello, I am Newbie, the main Developer of this bot.\n\nThanks for using: NEWBIEBOT.', 'aqua'))
+  console.log(color('\nYou can follow me on GitHub: diah082', 'aqua'))
+
+  const { state, saveCreds } = await useMultiFileAuthState("./A17-SESSION");
+  const A17 = A17Connect({
+    logger: pino({ level: "silent" }),
+    printQRInTerminal: true,
+    browser: ["NewbieBot", "Safari", "3.O"],
+    auth: state,
+  });
+
+  store.bind(A17.ev);
 
 
  //
-  A17.ws.on('CB:call', async (json) => {
-    const callerId = json.content[0].attrs['call-creator']
-    if (json.content[0].tag === 'offer') {
-      try {
-        let contactMessage = await A17.sendContact(callerId, global.Owner)
-        await A17.sendMessage(callerId, { text: `Automatic Block System!\nDo not call this number!\nPlease unblock this number with permission from the Bot Owner.` }, { quoted: contactMessage })
-        await sleep(8000)
-        await A17.updateBlockStatus(callerId, "block")
-      } catch (error) {
-        console.error(error)
-      }
-    }
-  })
-
 
   A17.ev.on("messages.upsert", async (chatUpdate) => {
     try {
@@ -131,35 +116,6 @@ if(usePairingCode && !A17.authState.creds.registered) {
       }
      })
  */
-
-  A17.ev.on('groups.update', async pea => {
-    //console.log(pea)
-    // Get Profile Picture Group
-    try {
-      ppgc = await A17.profilePictureUrl(pea[0].id, 'image')
-    } catch {
-      ppgc = 'https://images2.alphacoders.com/882/882819.jpg'
-    }
-    let wm_fatih = { url: ppgc }
-    if (pea[0].announce == true) {
-      //A17.send5ButImg(pea[0].id, `Grop has been *Closed!* Only *Admins* can send Messages!`, `A17 Bot`, wm_fatih, [])
-
-      A17.sendMessage(m.chat, { image: wm_fatih, caption: 'Grop has been *Closed!* Only *Admins* can send Messages!' })
-    } else if (pea[0].announce == false) {
-      // A17.send5ButImg(pea[0].id, `Grop has been *Opened!* Now *Everyone* can send Messages!`, `A17 Bot`, wm_fatih, [])
-      A17.sendMessage(m.chat, { image: wm_fatih, caption: 'Grop has been *Opened!* Now *Everyone* can send Messages!' })
-    } else if (pea[0].restrict == true) {
-      //A17.send5ButImg(pea[0].id, `Group Info modification has been *Restricted*, Now only *Admins* can edit Group Info !`, `A17 Bot`, wm_fatih, [])
-      A17.sendMessage(m.chat, { image: wm_fatih, caption: 'Group Info modification has been *Restricted*, Now only *Admins* can edit Group Info !' })
-    } else if (pea[0].restrict == false) {
-      //A17.send5ButImg(pea[0].id, `Group Info modification has been *Un-Restricted*, Now only *Everyone* can edit Group Info !`, `A17 Bot`, wm_fatih, [])
-      A17.sendMessage(m.chat, { image: wm_fatih, caption: 'Group Info modification has been *Un-Restricted*, Now only *Everyone* can edit Group Info !' })
-    } else {
-      //A17.send5ButImg(pea[0].id, `Group Subject has been uhanged To:\n\n*${pea[0].subject}*`, `A17 Bot`, wm_fatih, [])
-      A17textddfq = `Group Subject has been updated To:\n\n*${pea[0].subject}*`
-      A17.sendMessage(pea[0].id, { image: wm_fatih, caption: A17textddfq })
-    }
-  })
 
 
 
@@ -276,7 +232,7 @@ if(usePairingCode && !A17.authState.creds.registered) {
             A17text = `
 Hallo @${WAuserName.split("@")[0]},
 
-Saya Adalah*Emily Bot*, Welcome to ${metadata.subject}.
+Saya Adalah *NewbieBot*, Welcome to ${metadata.subject}.
 
 *Group Description:*
 ${metadata.desc}
@@ -1066,16 +1022,15 @@ You'll be a noticeable absence!
     );
   };
 
-  return A17
+  return A17;
 }
 
-return A17
-}
-startA17()
-let file = require.resolve(__filename)
+startA17();
+
+let file = require.resolve(__filename);
 fs.watchFile(file, () => {
-fs.unwatchFile(file)
-console.log(chalk.redBright(`Update ${__filename}`))
-delete require.cache[file]
-require(file)
-})
+  fs.unwatchFile(file);
+  console.log(chalk.redBright(`${__filename} Updated`));
+  delete require.cache[file];
+  require(file);
+});
