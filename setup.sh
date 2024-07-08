@@ -70,7 +70,6 @@ checking_sc() {
     exit
   fi
 }
-checking_sc
 echo -e "\e[32mloading...\e[0m"
 clear  
 # // Banner
@@ -102,8 +101,8 @@ clear
 echo -e "\033[96m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e " \e[1;971m                MEMASANG NEWBIEBOT WHATSAPP               \e[0m"
 echo -e "\033[96m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-git clone https://github.com/diah082/NewbieBot
-cd NewbieBot
+git clone https://github.com/diah082/bot
+cd bot
 npm i
 pm2 start index.js
 clear
@@ -116,5 +115,5 @@ echo -e "\033[96m━━━━━━━━━━━━━━━━━━━━━
 echo -e ""
 read -n 1 -s -r -p "Press any key to scan Barcode"
 
-cd /root/NewbieBot
+cd /root/bot
 npm start
